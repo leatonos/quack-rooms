@@ -19,7 +19,7 @@ export default function TestZone() {
 
   
   const router = useRouter()
-  const socket = io('http://localhost:3001')
+  const socket = io('https://socket-io-quackrooms-server-142859f50720.herokuapp.com/')
 
   useEffect(()=>{
 

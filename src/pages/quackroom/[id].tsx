@@ -18,7 +18,7 @@ export default function Home() {
   const [isJoined, setIsJoined] = useState(false);
   const [duckColor,setDuckColor] = useState<string>('#e9ff70')
   const [duckName,setDuckName] = useState<string>('Duck')
-  const socket = io('http://localhost:3001')
+  const socket = io('https://socket-io-quackrooms-server-142859f50720.herokuapp.com/')
 
 
 

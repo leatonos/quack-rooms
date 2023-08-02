@@ -8,7 +8,7 @@ import { FormEvent, useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { DuckRoom } from '@/types'
+import { DuckRoom,Duck } from '@/types'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,6 +20,15 @@ export default function RoomListItem(props:DuckRoom) {
 
     const router = useRouter()
     const duckRoomName = props.roomName
+    const ducks = props.ducks as Duck[]
+    const numberOfDucks = () =>{
+      if(ducks === undefined){
+        return 0
+      }else{
+        return ducks.length
+      }
+    }
+    const limitOfDucks = props.limit
 
   return (
     <div onClick={()=>router.push(`/quackroom/${props._id}`)}  className={styles.roomListItem}>
@@ -27,7 +36,7 @@ export default function RoomListItem(props:DuckRoom) {
         <h2>{duckRoomName}</h2>
         </div>
         <div className={styles.roomParticipantCounterContainer}>
-        {`${props.ducks.length}/${props.limit}`}
+        {`${numberOfDucks()}/${limitOfDucks}`}
         </div>
         <div></div>
     </div>

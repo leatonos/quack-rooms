@@ -7,7 +7,7 @@ export interface DuckRoom {
     _id:string
     roomId:string
     roomName:string
-    ducks:Duck[]
+    ducks?:Duck[]
     limit:number
 }
 

@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { MongoClient, ServerApiVersion, } from 'mongodb';
 //const { MongoClient, ServerApiVersion } = require('mongodb');
 
-const uri = process.env.MONGO_URI
+const uri = process.env.MONGO_URI as string
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 
 

@@ -3,60 +3,75 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import { FormEvent, useEffect, useState } from 'react'
-import RoomListItem from './components/roomListItem'
-import { DuckRoom } from '@/types'
+import { DuckMessage, DuckRoom } from '@/types'
 import { useRouter } from 'next/router'
+import { io } from 'socket.io-client'
+import RoomListItem from './components/roomListItem'
 
 const inter = Inter({ subsets: ['latin'] })
 
+export default function TestZone() {
 
-
-export default function Home() {
-
-  const router = useRouter()
 
   const [rooms,setRooms] = useState<DuckRoom[]>([])
   const [showRoomCreator,setRoomCreator] = useState<boolean>(false)
+  const [messages,setMessages] = useState<DuckMessage[]>([])
+
+  
+  const router = useRouter()
+  const socket = io('http://localhost:3001')
 
   useEffect(()=>{
 
-    const getRooms = async () => {
-      const response = await fetch('api/rooms')
-      const result:DuckRoom[] = await response.json() 
-      setRooms(result)
-    }
-    getRooms()
+  socket.connect();
+
+  socket.on("connect", () => {
+    console.log('connected with Id:',socket.id)
+    socket.emit('getRooms',socket.id)
+  });
+  
+
+  socket.on('activeRooms', (activeRooms) => {
+    setRooms(activeRooms)
+    console.log(activeRooms)
+    // Use the 'activeRooms' array as needed in your client-side code
+  });
+
+ 
+
+  return () =>{
+   socket.disconnect();
+  }
+
   },[])
 
   function RoomCreator(){
 
-    const createRoom =async (e:FormEvent) => {
-
-      e.preventDefault()
-
-      const newRoomName:string = (document.getElementById('newRoomName') as HTMLInputElement).value
-      const newroomLimit = (document.getElementById('roomLimit') as HTMLInputElement).value
-      
-      const dataToSend = {roomName:newRoomName,roomLimit:parseInt(newroomLimit)}
-
-      const requestOptions = {
-        method: 'POST',
-        body: JSON.stringify(dataToSend)
-      };
-
-      type ExpectedResult = {
-        newRoomId:string
-      }
-      
-      fetch("api/createroom", requestOptions)
-        .then(response => response.json())
-        .then((result:ExpectedResult) => router.push(`quackroom/${result.newRoomId}`))
-        .catch(error => console.log('error', error));
+    /**
+     * Generates a random string 
+     * @param length - how long the string should be
+     * @returns 
+     */
+    function generateRoomId(length:number) {
+      const array = new Uint8Array(length);
+      window.crypto.getRandomValues(array);
+      return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
     }
+    
+  const createRoom = (e:FormEvent) =>{
+
+    e.preventDefault()
+
+    const newRoomId = generateRoomId(16)
+    const roomName = (document.getElementById('newRoomName') as HTMLInputElement).value
+    const roomLimit = (document.getElementById('roomLimit') as HTMLInputElement).value
+    //Create a room using these parameters: roomId,roomName,limit
+    socket.emit('createRoom',newRoomId,roomName,Number(roomLimit))
+    router.push(`quackroom/${newRoomId}`)
+  }
    
-    if(!showRoomCreator){
-      return
-    }
+  if(!showRoomCreator){ return }
+  
     return(
       <div className='fullScreenCover'>
         <div className={styles.mainContainer}>
@@ -82,6 +97,7 @@ export default function Home() {
     )
   }
 
+
   return (
     <>
       <Head>
@@ -90,16 +106,15 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-     
-      <RoomCreator/>
+     <RoomCreator/>
      <main>
       <div className={styles.mainContainer}>
         <h1>Welcome to the Quackrooms</h1>
         <button onClick={()=>setRoomCreator(true)}> Create Room </button>
         <div className={styles.roomListContainer}>
-        {rooms.map((room)=>{
-          return <RoomListItem key={room._id} _id={room._id} roomName={room.roomName} ducks={room.ducks} limit={room.limit} />
-        })}
+          {rooms.map((room)=>{
+            return <RoomListItem key={room.roomId} _id={room.roomId} roomName={room.roomName} ducks={room.ducks} limit={room.limit} roomId={''} />
+          })}
         </div>
       </div>
      </main>

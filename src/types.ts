@@ -5,6 +5,7 @@ export interface Duck{
 
 export interface DuckRoom {
     _id:string
+    roomId:string
     roomName:string
     ducks:Duck[]
     limit:number

@@ -17,7 +17,7 @@ async function createRoom(newRoomName: string,newRoomLimit:number) {
 
    const newRoom = await roomCollection.insertOne({
     password:'',
-    ducks: [{duckName:'Duck',color:'#c9b93a'}],
+    ducks: [],
     roomName: newRoomName,
     limit:newRoomLimit
    })

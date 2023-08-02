@@ -4,7 +4,7 @@ import { MongoClient, ObjectId, ServerApiVersion, WithId, } from 'mongodb';
 import { Duck } from '@/types';
 //const { MongoClient, ServerApiVersion } = require('mongodb');
 
-const uri ='mongodb+srv://pedro:1CuYmShxJMsz23fj@cluster0.alojs.mongodb.net/?retryWrites=true&w=majority'
+const uri = process.env.MONGO_URI
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 
 type DuckRoom = {

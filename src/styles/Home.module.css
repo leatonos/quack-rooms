@@ -5,9 +5,6 @@
     --orangeb: #ffd670;
     --yellow: #e9ff70;
   */
-  
-
-
 .mainContainer{
     display: flex;
     flex-direction: column;
@@ -53,9 +50,35 @@
     left: 0;
     background-color: white;
     width: 20%;
+    height: 22vh;
 }
 
 .duckImageContainer{
     width: 35%;
     padding: 5px;
+}
+
+.duckList{
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    width: 15%;
+    z-index: 99;
+    background-color: white;
+    top:22vh;
+    left: 0;
+}
+
+.duckListItem{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+}
+
+.duckIcon{
+    width: 35px;
+}
+.duckInfo{
+
 }

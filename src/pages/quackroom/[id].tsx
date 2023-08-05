@@ -5,7 +5,7 @@ import styles from '@/styles/Home.module.css'
 import { FormEvent, useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 import { useRouter } from 'next/router'
-import { DuckMessage } from '@/types'
+import { Duck, DuckMessage } from '@/types'
 import DuckImage from '../components/duckImage'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -15,34 +15,42 @@ export default function Home() {
     
   const roomId = router.query.id as string
   const [messages,setMessages] = useState<DuckMessage[]>([])
-  const [isJoined, setIsJoined] = useState(false);
   const [duckColor,setDuckColor] = useState<string>('#e9ff70')
   const [duckName,setDuckName] = useState<string>('Duck')
-  const socket = io('https://socket-io-quackrooms-server-142859f50720.herokuapp.com/')
+  const [roomDucks,setRoomDucks] = useState<any[]>([])
+ 
+
+  const socketIoServer = process.env.NODE_ENV == 'development' ? 'http://localhost:3000' : 'https://socket-io-quackrooms-server-142859f50720.herokuapp.com/'
+  const socket = io(socketIoServer)
 
 
 
   useEffect(()=>{
 
-    socket.connect()
-    socket.emit('joinRoom', roomId,duckName,duckColor);
-    console.log('userConnected')
-
     if(!router.isReady){
-        return
+      return
     }
 
-
-
-    
+    socket.connect()
+    socket.emit('joinRoom', roomId,duckName,duckColor);
     
     socket.on(`new message`,(msg:DuckMessage)=>{
       console.log(msg)
       setMessages((prevMessages) => [...prevMessages, msg]);
     })
 
+    socket.on(`Users in room`,(users)=>{
+      console.log(users)
+      setRoomDucks(users)
+    })
+
     socket.on(`changeDuck:`,(duck)=>{
      console.log('A duck changed color or name')
+    })
+
+
+    socket.on('New duck in the room',(ducks)=>{
+
     })
 
      // Clean up the socket connection when the component unmounts
@@ -50,7 +58,7 @@ export default function Home() {
       socket.disconnect();
     };
 
-  },[router,isJoined])
+  },[router])
 
 
   const serverChangeDuckColor=async (roomCode:string,duckColor:string,duckNumber:number) => {
@@ -72,7 +80,18 @@ export default function Home() {
 
   }
 
-
+function DuckListItem(props:Duck){
+  return(
+    <div className={styles.duckListItem}>
+        <div className={styles.duckIcon}>
+            <DuckImage color={duckColor} duckName={''}/>
+        </div>
+        <div className={styles.duckInfo}>
+          <h4>Duck name</h4>
+        </div>
+      </div>
+  )
+}
 
   return (
 <>
@@ -94,6 +113,10 @@ export default function Home() {
         <label htmlFor="duckName">Duck Name: </label>
         <input type="text" id="duckName" onBlur={(e)=>setDuckName(e.target.value)} defaultValue={'Duck'}></input>
       </div>
+     </div>
+     <div className={styles.duckList}>
+     <h3>Online Ducks</h3>
+      <p>{JSON.stringify(roomDucks)}</p>
      </div>
      <ul id="messages">
       {messages.map((message,index)=>{

@@ -10,7 +10,7 @@ import RoomListItem from './components/roomListItem'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function TestZone() {
+export default function Home() {
 
 
   const [rooms,setRooms] = useState<DuckRoom[]>([])
@@ -19,7 +19,8 @@ export default function TestZone() {
 
   
   const router = useRouter()
-  const socket = io('https://socket-io-quackrooms-server-142859f50720.herokuapp.com/')
+  const socketIoServer = process.env.NODE_ENV == 'development' ? 'http://localhost:3000' : 'https://socket-io-quackrooms-server-142859f50720.herokuapp.com/'
+  const socket = io(socketIoServer)
 
   useEffect(()=>{
 
@@ -110,14 +111,23 @@ export default function TestZone() {
      <main>
       <div className={styles.mainContainer}>
         <h1>Welcome to the Quackrooms</h1>
+        <h1>{socketIoServer}</h1>
         <button onClick={()=>setRoomCreator(true)}> Create Room </button>
         <div className={styles.roomListContainer}>
-          {rooms.map((room)=>{
-            return <RoomListItem key={room.roomId} _id={room.roomId} roomName={room.roomName} ducks={room.ducks} limit={room.limit} roomId={''} />
-          })}
+         {rooms.map((room)=>{
+          return <RoomListItem ducks={room.ducks} roomId={room.roomId} roomName={room.roomName} limit={room.limit} />
+         })}
         </div>
       </div>
      </main>
     </>
   )
 }
+
+/*
+ 
+          {rooms.map((room)=>{
+            return <RoomListItem key={room.roomId} _id={room.roomId} roomName={room.roomName} ducks={room.ducks} limit={room.limit} roomId={''} />
+          })}
+
+*/

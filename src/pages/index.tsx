@@ -140,7 +140,7 @@ export default function Home() {
           
         {
           rooms.map((room)=>{
-            return <RoomListItem ducks={room.ducks} roomId={room._id} roomName={room.roomName} limit={room.limit} />
+            return <RoomListItem key={`${room._id}${room.ducks}`} ducks={room.ducks} roomId={room._id} roomName={room.roomName} limit={room.limit} />
           })
         }
 

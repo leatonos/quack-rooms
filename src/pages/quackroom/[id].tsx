@@ -46,10 +46,12 @@ export default function Home() {
 
     socket.on(`Ducks in the room`,(roomInfo:DuckRoom)=>{
       console.log(roomInfo)
-      if(!roomInfo.ducks){
+      if(!roomInfo){
         return
+      }else if(!roomInfo.ducks){
+       return
       }else{
-        setRoomDucks(roomInfo.ducks as Duck[])
+        setRoomDucks(roomInfo.ducks)
       }
     })
 
@@ -119,7 +121,7 @@ function DuckListItem(props:Duck){
      <div className={styles.duckList}>
       <h3>Online Ducks</h3>
       {
-     
+        
       roomDucks.map((duck)=>{
         return <DuckListItem key={`${duck.duckId}-${duck.color}-${duck.duckName}`} duckName={duck.duckName} color={duck.color} duckId={duck.duckId}/>
       })

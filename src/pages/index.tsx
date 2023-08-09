@@ -20,13 +20,16 @@ export default function Home() {
   
   const router = useRouter()
   const socketIoServer = process.env.NODE_ENV == 'development' ? 'http://localhost:3004' : 'https://socket-io-quackrooms-server-142859f50720.herokuapp.com/'
-  const socket = io(socketIoServer)
+  const socket = io(socketIoServer,{
+    withCredentials: true,
+    extraHeaders: {
+      "my-custom-header": "abcd"
+    }
+  })
 
   useEffect(()=>{
 
   socket.connect();
-
-  
 
   socket.on("connect", () => {
     console.log(socket.id)

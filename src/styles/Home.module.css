@@ -50,7 +50,7 @@
     left: 0;
     background-color: white;
     width: 20%;
-    height: 22vh;
+    height: 250px;
 }
 
 .duckImageContainer{
@@ -65,7 +65,7 @@
     width: 15%;
     z-index: 99;
     background-color: white;
-    top:22vh;
+    top:250px;
     left: 0;
 }
 
@@ -79,6 +79,54 @@
 .duckIcon{
     width: 35px;
 }
-.duckInfo{
 
+/*
+Messages
+*/
+
+.messagesContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    max-height: calc(100vh - 50px);
+    overflow-y: auto;
+}
+
+.messageContainer{
+    display: flex;
+    width: 80%;
+    margin: 5px;
+    background-color: white;
+    padding: 10px;
+  
+}
+
+.messageDuckIconContainer{
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    padding: 10px;
+}
+
+.messageDuckImage{
+    width: 100%;
+}
+
+.duckPortrait{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    margin-left: calc(50% - 30px);
+}
+
+.messageDuckName{
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+.messageTextContainer{
+    width: 80%;
+    word-wrap: break-word;
 }

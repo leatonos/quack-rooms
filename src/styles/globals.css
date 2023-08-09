@@ -16,7 +16,7 @@ main{
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  
   height: 100vh;
   background-color: var(--blue);
 }
@@ -38,6 +38,6 @@ main{
 #input:focus { outline: none; }
 #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
 
-#messages { list-style-type: none; margin: 0; padding: 0; max-width: 670px; overflow-y: auto;}
+#messages { list-style-type: none; margin: 0; padding: 0; max-width: 670px; overflow-y: auto; max-height: calc(100vh - 120px);}
 #messages > li { padding: 0.5rem 1rem; }
 #messages > li:nth-child(odd) { background: #efefef; }

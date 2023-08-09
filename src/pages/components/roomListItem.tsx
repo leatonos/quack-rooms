@@ -31,7 +31,7 @@ export default function RoomListItem(props:DuckRoom) {
     const limitOfDucks = props.limit
 
   return (
-    <div onClick={()=>router.push(`/quackroom/${props._id}`)}  className={styles.roomListItem}>
+    <div onClick={()=>router.push(`/quackroom/${props.roomId}`)}  className={styles.roomListItem}>
         <div className={styles.roomNameContainer}>
         <h2>{duckRoomName}</h2>
         </div>

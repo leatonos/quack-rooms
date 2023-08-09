@@ -13,21 +13,23 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
 
 
-  const [rooms,setRooms] = useState<DuckRoom[]>([])
+  const [rooms,setRooms] = useState<any[]>([])
   const [showRoomCreator,setRoomCreator] = useState<boolean>(false)
   const [messages,setMessages] = useState<DuckMessage[]>([])
 
   
   const router = useRouter()
-  const socketIoServer = process.env.NODE_ENV == 'development' ? 'http://localhost:3000' : 'https://socket-io-quackrooms-server-142859f50720.herokuapp.com/'
+  const socketIoServer = process.env.NODE_ENV == 'development' ? 'http://localhost:3004' : 'https://socket-io-quackrooms-server-142859f50720.herokuapp.com/'
   const socket = io(socketIoServer)
 
   useEffect(()=>{
 
   socket.connect();
 
+  
+
   socket.on("connect", () => {
-    console.log('connected with Id:',socket.id)
+    console.log(socket.id)
     socket.emit('getRooms',socket.id)
   });
   
@@ -38,7 +40,10 @@ export default function Home() {
     // Use the 'activeRooms' array as needed in your client-side code
   });
 
- 
+  socket.on('roomCreated', (roomId) => {
+    console.log("Room created", roomId)
+    //
+  });
 
   return () =>{
    socket.disconnect();
@@ -47,29 +52,47 @@ export default function Home() {
   },[])
 
   function RoomCreator(){
-
-    /**
-     * Generates a random string 
-     * @param length - how long the string should be
-     * @returns 
-     */
-    function generateRoomId(length:number) {
-      const array = new Uint8Array(length);
-      window.crypto.getRandomValues(array);
-      return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
-    }
     
-  const createRoom = (e:FormEvent) =>{
+    const createRoom = async(e:FormEvent) =>{
 
-    e.preventDefault()
+      e.preventDefault()
 
-    const newRoomId = generateRoomId(16)
-    const roomName = (document.getElementById('newRoomName') as HTMLInputElement).value
-    const roomLimit = (document.getElementById('roomLimit') as HTMLInputElement).value
-    //Create a room using these parameters: roomId,roomName,limit
-    socket.emit('createRoom',newRoomId,roomName,Number(roomLimit))
-    router.push(`quackroom/${newRoomId}`)
-  }
+      const roomName = (document.getElementById('newRoomName') as HTMLInputElement).value
+      const roomLimit = (document.getElementById('roomLimit') as HTMLInputElement).value
+      const password = ''
+      const requestData = {
+        roomName: roomName,
+        password: password,
+        limit: roomLimit,
+      };
+
+
+      //Create a room using these parameters: roomId,roomName,limit
+      
+      try {
+        const response = await fetch('/api/createroom', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+        });
+  
+        if (response.ok) {
+          const responseData = await response.json();
+          console.log(responseData)
+          socket.emit('createRoom')
+          router.push(`quackroom/${responseData.newRoomId}`)
+        } else {
+          console.error('Request failed with status:', response.status);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+
+
+
+    }
    
   if(!showRoomCreator){ return }
   
@@ -98,6 +121,10 @@ export default function Home() {
     )
   }
 
+  function getMongoRooms(){
+    //socket.emit('getMongoRooms')
+  }
+
 
   return (
     <>
@@ -112,11 +139,18 @@ export default function Home() {
       <div className={styles.mainContainer}>
         <h1>Welcome to the Quackrooms</h1>
         <h1>{socketIoServer}</h1>
+        <button onClick={getMongoRooms}>getMongoRooms</button>
         <button onClick={()=>setRoomCreator(true)}> Create Room </button>
         <div className={styles.roomListContainer}>
-         {rooms.map((room)=>{
+          
+          {JSON.stringify(rooms)}
+
+         {
+         /*rooms.map((room)=>{
           return <RoomListItem ducks={room.ducks} roomId={room.roomId} roomName={room.roomName} limit={room.limit} />
-         })}
+         })*/
+         }
+
         </div>
       </div>
      </main>

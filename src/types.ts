@@ -1,4 +1,5 @@
 export interface Duck{
+    duckId:string
     duckName:string
     color:string
 }
@@ -12,6 +13,7 @@ export interface DuckRoom {
 
 export interface DuckMessage {
     text: string
-    sender:string
     roomId:string
+    duckName:string
+    color:string
 }

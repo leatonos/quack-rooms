@@ -16,6 +16,7 @@ export default function Home() {
   const router = useRouter()
     
   const roomId = router.query.id as string
+  const [roomChecked,setRoomCheck] = useState<boolean>(false)
   const [messages,setMessages] = useState<DuckMessage[]>([])
   const [duckColor,setDuckColor] = useState<string>('#e9ff70')
   const [duckName,setDuckName] = useState<string>('Duck')
@@ -27,12 +28,22 @@ export default function Home() {
 
   useEffect(()=>{
 
+    //We need to wait until the router is ready
     if(!router.isReady){
       return
     }
+    //Make sure the room exists in the database
+    if(!roomChecked){
+      getInitialdata(roomId)
+      return
+    }
+
+    
+
 
     socket.connect()
 
+   
     socket.on("connect", () => {
       setDuckId(socket.id)
     });
@@ -60,7 +71,7 @@ export default function Home() {
       socket.disconnect();
     };
 
-  },[router])
+  },[router,roomChecked])
 
   const serverChangeDuck=async () => {
     socket.emit('duckChange',roomId,duckId,duckName,duckColor)
@@ -79,6 +90,27 @@ export default function Home() {
 
     socket.emit('message', messageObj);
     (document.getElementById('input') as HTMLInputElement).value = '' 
+
+  }
+
+  const getInitialdata =async (roomId:string) => {
+    const request = await fetch('/api/getroominfo',{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Adjust the content type if needed
+      },
+      body: JSON.stringify({roomId:roomId}), // Convert your string data to JSON
+    })
+
+    const responseData = await request.json();
+    console.log(responseData)
+    //If the room does not exist in the database we send the user back to the homepage
+    
+    if(!responseData){
+      router.push('/')
+    }else{
+      setRoomCheck(true)
+    }
 
   }
 

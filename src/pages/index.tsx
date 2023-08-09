@@ -121,10 +121,6 @@ export default function Home() {
     )
   }
 
-  function getMongoRooms(){
-    //socket.emit('getMongoRooms')
-  }
-
 
   return (
     <>
@@ -139,17 +135,14 @@ export default function Home() {
       <div className={styles.mainContainer}>
         <h1>Welcome to the Quackrooms</h1>
         <h1>{socketIoServer}</h1>
-        <button onClick={getMongoRooms}>getMongoRooms</button>
         <button onClick={()=>setRoomCreator(true)}> Create Room </button>
         <div className={styles.roomListContainer}>
           
-          {JSON.stringify(rooms)}
-
-         {
-         /*rooms.map((room)=>{
-          return <RoomListItem ducks={room.ducks} roomId={room.roomId} roomName={room.roomName} limit={room.limit} />
-         })*/
-         }
+        {
+          rooms.map((room)=>{
+            return <RoomListItem ducks={room.ducks} roomId={room._id} roomName={room.roomName} limit={room.limit} />
+          })
+        }
 
         </div>
       </div>

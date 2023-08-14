@@ -95,9 +95,9 @@ Messages
 
 .messageContainer{
     display: flex;
+    flex-wrap: wrap;
     width: 80%;
     margin: 5px;
-    background-color: white;
     padding: 10px;
   
 }
@@ -127,6 +127,6 @@ Messages
     text-align: center;
 }
 .messageTextContainer{
-    width: 80%;
+    width: calc(80% - 35px);
     word-wrap: break-word;
 }

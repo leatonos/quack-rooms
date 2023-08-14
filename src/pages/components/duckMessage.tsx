@@ -23,17 +23,20 @@ export default function DuckMessageComponent(props:DuckMessage) {
 
   return (
     <div className={styles.messageContainer}>
+        <div className={styles.messageDuckIconContainer}>
+      </div>
+        <div className={styles.messageTextContainer}>
+          <div className='speech-bubble-left'>
+            <div className="title">{props.text}</div>
+          </div>
+        </div>
       <div className={styles.messageDuckIconContainer}>
         <div className={styles.duckPortrait}>
            <DuckImage duckId={''} duckName={''} color={props.color}/>
         </div>
         <h4 className={styles.messageDuckName}>{props.duckName}</h4>
       </div>
-      <div className={styles.messageTextContainer}>
-        <p className={styles.messageText}>
-          {props.text}
-        </p>
-      </div>
+   
     </div>
   )
 }

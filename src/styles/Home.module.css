@@ -253,6 +253,7 @@ Messages
     .messagesContainer{
         margin-top: 180px;
         width: 100%;
+        max-height: calc(100vh - 230px);
     }
 
     .messageTextContainer{

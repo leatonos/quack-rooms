@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 import { Duck, DuckMessage, DuckRoom } from '@/types'
 import DuckImage from '../components/duckImage'
 import DuckMessageComponent from '../components/duckMessage'
-
+import {Howl, Howler} from 'howler';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,12 +17,14 @@ export default function Home() {
     
   const roomId = router.query.id as string
   const [roomChecked,setRoomCheck] = useState<boolean>(false)
+  const [isConnected,setConnectionState] = useState<boolean>(false)
   const [messages,setMessages] = useState<DuckMessage[]>([])
   const [duckColor,setDuckColor] = useState<string>('#e9ff70')
   const [duckName,setDuckName] = useState<string>('Duck')
   const [duckId,setDuckId] = useState<string>('')
   const [roomDucks,setRoomDucks] = useState<Duck[]>([])
- 
+
+  //Sound Effects
   const socketIoServer = process.env.NODE_ENV == 'development' ? 'http://localhost:3004' : 'https://socket-io-quackrooms-server-142859f50720.herokuapp.com/'
   const socket = io(socketIoServer)
 
@@ -37,9 +39,6 @@ export default function Home() {
       getInitialdata(roomId)
       return
     }
-
-    
-
 
     socket.connect()
 
@@ -63,7 +62,16 @@ export default function Home() {
        return
       }else{
         setRoomDucks(roomInfo.ducks)
+        setConnectionState(true)
       }
+    })
+
+    socket.on(`Quack`, (duckInfo)=>{
+      const sound = new Howl({
+        src: ['/quack-sound-1.mp3'], // Replace with your sound file path
+      });
+  
+      sound.play();
     })
 
      // Clean up the socket connection when the component unmounts
@@ -91,6 +99,10 @@ export default function Home() {
     socket.emit('message', messageObj);
     (document.getElementById('input') as HTMLInputElement).value = '' 
 
+  }
+
+  const sendQuack = async () => {
+    socket.emit('sendQuack',roomId,duckId,duckName,duckColor)
   }
 
   const getInitialdata =async (roomId:string) => {
@@ -137,17 +149,25 @@ function DuckListItem(props:Duck){
       </Head>
      <main>
      <div className={styles.duckEditorContainer}>
-      <div className={styles.duckImageContainer}>
-        <DuckImage color={duckColor} duckName={''} duckId={''}/>
+      <div className={styles.duckInfoCon}>
+        <div className={styles.duckImageContainer}>
+          <DuckImage color={duckColor} duckName={''} duckId={''}/>
+        </div>
+        <div className={styles.duckState}>
+          <h3>Your Duck</h3>
+          <h4>{isConnected ? 'Connected' : 'Connecting...'}</h4>
+        </div>
       </div>
+      
       <div className={styles.duckEditor}>
-        <h3>Your Duck</h3>
-        <h4>{duckId}</h4>
-        <label htmlFor="duckColor">Duck color</label>
-        <p>{duckColor}</p>
-        <input type="color" id="duckColor" onChange={(e)=>setDuckColor(e.target.value)} onBlur={()=>serverChangeDuck()} defaultValue={duckColor}></input>
-        <label htmlFor="duckName">Duck Name: </label>
-        <input type="text" id="duckName" onChange={(e)=>setDuckName(e.target.value)} onBlur={()=>serverChangeDuck()} defaultValue={'Duck'}></input>
+        <div className={styles.duckColorEditorControl}>
+          <label className={styles.colorTitle} htmlFor="duckColor">Duck color</label>
+          <input type="color" id="duckColor" onChange={(e)=>setDuckColor(e.target.value)} onBlur={()=>serverChangeDuck()} defaultValue={duckColor}></input>
+        </div>
+        <div className={styles.duckEditorControl}>
+          <label className={styles.nameTitle} htmlFor="duckName">Duck Name: </label>
+          <input type="text" id="duckName" onChange={(e)=>setDuckName(e.target.value)} onBlur={()=>serverChangeDuck()} defaultValue={'Duck'}></input>
+        </div>
       </div>
      </div>
      <div className={styles.duckList}>
@@ -166,9 +186,14 @@ function DuckListItem(props:Duck){
         )
       })}
      </div>
-      <form id="form" action="" onSubmit={(e)=>sendMessage(e)}>
-        <input id="input" autoComplete="off" /><button type='submit'>Send</button>
-      </form>
+      {isConnected &&
+      
+        <form id="form" action="" onSubmit={(e)=>sendMessage(e)}>
+          <input id="input" autoComplete="off" />
+          <button type='submit'>Send</button>
+          <button onClick={sendQuack} type='button'>Quack!</button>
+        </form>
+      }
      </main>
     </>
   )

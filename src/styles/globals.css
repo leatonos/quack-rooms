@@ -5,6 +5,7 @@
   --orangea: #ff9770;
   --orangeb: #ffd670;
   --yellow: #e9ff70;
+  --acmeFont: Acme;
 }
 
 body{
@@ -12,11 +13,16 @@ body{
   padding: 0;
 }
 
+
+@font-face {
+  font-family: Acme;
+  src: url('../../public/fonts/Acme-Regular.ttf');
+}
+
 main{
   display: flex;
   flex-direction: column;
   align-items: center;
-  
   height: 100vh;
   background-color: var(--blue);
 }
@@ -41,3 +47,34 @@ main{
 #messages { list-style-type: none; margin: 0; padding: 0; max-width: 670px; overflow-y: auto; max-height: calc(100vh - 120px);}
 #messages > li { padding: 0.5rem 1rem; }
 #messages > li:nth-child(odd) { background: #efefef; }
+
+
+
+/*------ Style 1 ------*/
+#duckColor {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  width: 50px;
+  height: 50px;
+  border: none;
+  cursor: pointer;
+  
+}
+#duckColor::-webkit-color-swatch {
+  border-radius: 50%;
+  border: 3px solid #000000;
+}
+#duckColor::-moz-color-swatch {
+  border-radius: 50%;
+  border: 3px solid #000000;
+}
+
+p,label,li,input{
+  font-family: var(--acmeFont);
+}
+
+h1,h2,h3,h4{
+  font-family: var(--acmeFont);
+}

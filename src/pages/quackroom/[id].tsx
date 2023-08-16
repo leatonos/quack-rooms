@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState, useRef } from 'react'
 import { io } from 'socket.io-client'
 import { useRouter } from 'next/router'
 import { Duck, DuckMessage, DuckRoom } from '@/types'
@@ -23,6 +23,8 @@ export default function Home() {
   const [duckName,setDuckName] = useState<string>('Duck')
   const [duckId,setDuckId] = useState<string>('')
   const [roomDucks,setRoomDucks] = useState<Duck[]>([])
+
+  const messageContainer = useRef<HTMLDivElement>(null)
 
   //Sound Effects
   const socketIoServer = process.env.NODE_ENV == 'development' ? 'http://localhost:3004' : 'https://socket-io-quackrooms-server-142859f50720.herokuapp.com/'
@@ -49,7 +51,7 @@ export default function Home() {
 
     socket.emit('joinRoom', roomId,duckName,duckColor);
     
-    socket.on(`new message`,(msg:DuckMessage)=>{
+    socket.on(`new message`,async(msg:DuckMessage)=>{
       console.log(msg)
       setMessages((prevMessages) => [...prevMessages, msg]);
     })
@@ -74,12 +76,25 @@ export default function Home() {
       sound.play();
     })
 
+    scrollToLastMessage()
+
      // Clean up the socket connection when the component unmounts
      return () => {
       socket.disconnect();
     };
 
   },[router,roomChecked])
+
+
+  useEffect(()=>{
+    scrollToLastMessage()
+  },[messages])
+
+  const scrollToLastMessage = ()=>{
+    const maxScrollHeight = messageContainer.current?.scrollHeight as number
+    messageContainer.current?.scrollTo(0,maxScrollHeight)
+
+  }
 
   const serverChangeDuck=async () => {
     socket.emit('duckChange',roomId,duckId,duckName,duckColor)
@@ -179,7 +194,7 @@ function DuckListItem(props:Duck){
       })
       }
      </div>
-     <div className={styles.messagesContainer}>
+     <div className={styles.messagesContainer} id='test' ref={messageContainer}>
       {messages.map((message,index)=>{
         return (
           <DuckMessageComponent key={index} text={message.text} roomId={''} duckName={message.duckName} color={message.color}/>

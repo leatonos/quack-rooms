@@ -51,6 +51,8 @@ export default function Home() {
 
   },[])
 
+
+  
   function RoomCreator(){
     
     const createRoom = async(e:FormEvent) =>{
@@ -98,8 +100,8 @@ export default function Home() {
   
     return(
       <div className='fullScreenCover'>
-        <div className={styles.mainContainer}>
-          <div className={styles.mainContainerHeader}>
+        <div className={styles.roomCreatorContainer}>
+          <div className={styles.roomCreatorContainerHeader}>
             <h2>Create Room</h2>
             <form onSubmit={createRoom}>
               <div>
@@ -134,8 +136,7 @@ export default function Home() {
      <main>
       <div className={styles.mainContainer}>
         <h1>Welcome to the Quackrooms</h1>
-        <h1>{socketIoServer}</h1>
-        <button onClick={()=>setRoomCreator(true)}> Create Room </button>
+        <button className={styles.createRoomBtn} onClick={()=>setRoomCreator(true)}> Create Room </button>
         <div className={styles.roomListContainer}>
           
         {

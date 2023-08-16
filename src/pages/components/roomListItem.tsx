@@ -36,7 +36,7 @@ export default function RoomListItem(props:DuckRoom) {
         <h2>{duckRoomName}</h2>
         </div>
         <div className={styles.roomParticipantCounterContainer}>
-        {`${numberOfDucks()}/${limitOfDucks}`}
+          <p>{`${numberOfDucks()}/${limitOfDucks}`}</p>
         </div>
         <div></div>
     </div>

@@ -6,12 +6,26 @@
     --yellow: #e9ff70;
   */
 .mainContainer{
+    margin-top: calc(10vh - 12px);
     display: flex;
     flex-direction: column;
     background-color: white;
     border-radius: 3px;
     padding: 12px;
-    width: 65%;
+    width: 70%;
+    height: 80vh;
+    align-items: center;
+}
+
+.createRoomBtn{
+    width: 120px;
+    background-color: var(--yellow);
+    border: none;
+    padding: 12px;
+    font-family: Acme;
+    font-size: 15px;
+    border-radius: 15px;
+    margin: 20px;
 }
 
 .roomListContainer{
@@ -20,14 +34,18 @@
     flex-wrap: wrap;
     background-color: var(--orangeb);
     padding: 20px;
+    overflow-y: auto;
+    height: calc(80vh - 200px);
+    width: calc(100% - 40px);
 }
 
 .roomListItem{
-    text-align: center;
     display: flex;
     width: calc(30% - 38px);
+    text-align: center;
     margin: 20px;
     border-radius: 3px;
+    height: calc(50% - 64px);
     flex-direction: column;
     background-color: white;
     padding: 12px;
@@ -41,6 +59,15 @@
 .roomParticipantCounterContainer{
     width: 100%;
 }
+.roomCreatorContainer{
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/*
+Rooms
+*/
 
 .duckEditorContainer{
     display: flex;
@@ -51,6 +78,7 @@
     left: 0;
     background-color: white;
     width: 20%;
+    min-width: 240px;
     height: 40vh;
 }
 
@@ -69,12 +97,19 @@
     padding: 15px;
 }
 
+.duckEditor{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .duckColorEditorControl{
     display: flex;
     width: 100%;
     align-items: center;
     justify-content: center;
 }
+
 .duckEditorControl{
     margin: 15px 0px;
     display: flex;
@@ -109,6 +144,7 @@
     overflow-y: auto;
     padding: 20px;
     width: calc(20% - 40px);
+    min-width: 200px;
 }
 
 .duckListItem{
@@ -174,3 +210,53 @@ Messages
     margin-left: 10%;
     margin-bottom: 10px;
 }
+
+
+@media only screen and (max-width: 839px) {
+    /* Home page */
+    .mainContainer{
+        width: calc(100% - 40px);
+    }
+
+    .roomListItem{
+        width: 100%;
+        height: 120px;
+       
+    }
+    /* Room duck Info */
+    .duckEditorContainer{
+        width: 100%;
+        height: 150px;
+    }
+
+    .duckList{
+        display: none;
+    }
+
+    .duckImageContainer{
+        width: 40%;
+    }
+
+    .duckEditor{
+        width: 50%;
+    }
+
+    .duckInfoCon{
+        width: 50%;
+    }
+    .duckState{
+        width: 60%;
+    }
+
+    /* Chat message */
+
+    .messagesContainer{
+        margin-top: 180px;
+        width: 100%;
+    }
+
+    .messageTextContainer{
+        width: 100%;
+    }
+
+  }

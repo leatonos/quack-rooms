@@ -129,11 +129,12 @@ export default function Home() {
       body: JSON.stringify({roomId:roomId}), // Convert your string data to JSON
     })
 
-    const responseData = await request.json();
-    console.log(responseData)
+    const responseData = await request.json() as DuckRoom
+    const duckList = responseData.ducks as Duck[]
+    console.log(responseData.ducks)
     //If the room does not exist in the database we send the user back to the homepage
     
-    if(!responseData){
+    if(!responseData || duckList.length >= responseData.limit){
       router.push('/')
     }else{
       setRoomCheck(true)

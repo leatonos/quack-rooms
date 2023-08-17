@@ -151,11 +151,3 @@ export default function Home() {
     </>
   )
 }
-
-/*
- 
-          {rooms.map((room)=>{
-            return <RoomListItem key={room.roomId} _id={room.roomId} roomName={room.roomName} ducks={room.ducks} limit={room.limit} roomId={''} />
-          })}
-
-*/

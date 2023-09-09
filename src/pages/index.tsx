@@ -113,8 +113,8 @@ export default function Home() {
                 <input type='number' id='roomLimit' max={12} min={1} defaultValue={4}></input>
               </div>
               <div>
-                <button type='submit'>Create Room</button>
-                <button type='button' onClick={()=>setRoomCreator(false)}>Cancel</button>
+                <button className={styles.createRoomBtn} type='submit'> Create Room </button>
+                <button className={styles.cancelCreateBtn} type='button' onClick={()=>setRoomCreator(false)}>Cancel</button>
               </div>              
             </form>
           </div>

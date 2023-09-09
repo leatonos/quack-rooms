@@ -17,7 +17,7 @@
     align-items: center;
 }
 
-.createRoomBtn{
+.createRoomBtn , .cancelCreateBtn{
     width: 120px;
     background-color: var(--yellow);
     border: none;
@@ -26,6 +26,11 @@
     font-size: 15px;
     border-radius: 15px;
     margin: 20px;
+    cursor: pointer;
+}
+
+.cancelCreateBtn{
+    background-color: var(--orangea);
 }
 
 .roomListContainer{

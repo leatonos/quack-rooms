@@ -74,6 +74,8 @@ export default function Home() {
       });
   
       sound.play();
+      showNotification("Quack",500)
+     
     })
 
     scrollToLastMessage()
@@ -141,6 +143,22 @@ export default function Home() {
       setRoomCheck(true)
     }
 
+  }
+
+
+  const showNotification = (text:string,time:number) => {
+    // create a new notification
+
+    const notification = new Notification('JavaScript Notification API', {
+        body: 'This is a JavaScript Notification API demo',
+        icon: './img/js.png',
+        vibrate: 200
+    });
+
+    // close the notification after 10 seconds
+    setTimeout(() => {
+        notification.close();
+    }, 1 * 1000);
   }
 
 function DuckListItem(props:Duck){
